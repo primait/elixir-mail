@@ -737,6 +737,28 @@ defmodule Mail.Parsers.RFC2822Test do
     assert message.body == "first line\r\nsecond line\r\nbye"
   end
 
+  test "parses multipart nodes with wrong capitalization in content-type" do
+    message =
+      parse_email("""
+      To: user@example.com
+      From: me@example.com
+      Subject: hello, world
+      Content-type: multipart/mixed;
+      \tboundary="B_3741238731_409882693"
+
+      --B_3741238731_409882693
+      Content-Type: text/plain
+      Content-Transfer-Encoding: 7bit
+
+      hello, world
+
+      --B_3741238731_409882693--
+      """)
+
+    assert %Mail.Message{multipart: true, parts: [text_message_part]} = message
+    assert text_message_part.body == "hello, world"
+  end
+
   defp parse_email(email),
     do: email |> convert_crlf |> Mail.Parsers.RFC2822.parse()
 
