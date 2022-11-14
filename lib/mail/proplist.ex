@@ -38,7 +38,7 @@ defmodule Mail.Proplist do
   * `list` - the list to look in
   * `key` - the key to look for
   """
-  @spec has_key?(list :: __MODULE__.t(), key :: term) :: [term] | false
+  @spec has_key?(list :: __MODULE__.t(), key :: term) :: boolean
   def has_key?(list, key) do
     Enum.any?(list, fn
       {k, _value} -> key == k
@@ -55,6 +55,7 @@ defmodule Mail.Proplist do
   * `key` - the key of the pair
   * `value` - the value of the pair
   """
+  @dialyzer {:no_underspecs, put: 3}
   @spec put(list :: __MODULE__.t(), key :: term, value :: term) :: __MODULE__.t()
   def put(list, key, value) do
     :lists.keystore(key, 1, list, {key, value})
@@ -69,6 +70,7 @@ defmodule Mail.Proplist do
   * `key` - the key of the pair
   * `value` - the value of the pair
   """
+  @dialyzer {:no_underspecs, prepend: 3}
   @spec prepend(list :: __MODULE__.t(), key :: term, value :: term) :: __MODULE__.t()
   def prepend(list, key, value) do
     if has_key?(list, key) do
@@ -151,7 +153,7 @@ defmodule Mail.Proplist do
   * `list` - the list to filter
   * `func` - the function to execute
   """
-  @spec filter(list :: __MODULE__.t(), func :: any) :: __MODULE__.t()
+  @spec filter(list :: __MODULE__.t(), ({term, term} -> boolean)) :: __MODULE__.t()
   def filter(list, func) do
     Enum.filter(list, fn
       {_key, _value} = value -> func.(value)
@@ -166,7 +168,7 @@ defmodule Mail.Proplist do
   * `list` - the list
   * `keys` - the keys to remove
   """
-  @spec drop(list :: __MODULE__.t(), keys :: list) :: __MODULE__.t()
+  @spec drop(list :: __MODULE__.t(), keys :: Enum.t()) :: __MODULE__.t()
   def drop(list, keys) do
     filter(list, fn {key, _value} -> !Enum.member?(keys, key) end)
   end
@@ -178,7 +180,7 @@ defmodule Mail.Proplist do
   * `list` - the list
   * `keys` - the keys to keep
   """
-  @spec take(list :: __MODULE__.t(), keys :: list) :: __MODULE__.t()
+  @spec take(list :: __MODULE__.t(), keys :: Enum.t()) :: __MODULE__.t()
   def take(list, keys) do
     filter(list, fn {key, _value} -> Enum.member?(keys, key) end)
   end
