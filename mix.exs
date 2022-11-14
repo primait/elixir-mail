@@ -17,7 +17,13 @@ defmodule Mail.Mixfile do
       docs: docs(),
       deps: deps(),
       dialyzer: [
-        plt_add_apps: [:ex_unit]
+        plt_add_apps: [:ex_unit],
+        flags: [
+          "-Werror_handling",
+          "-Wunderspecs",
+          "-Wunknown",
+          "-Wunmatched_returns"
+        ]
       ]
     ]
   end
