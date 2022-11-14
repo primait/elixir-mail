@@ -15,7 +15,10 @@ defmodule Mail.Mixfile do
       description: description(),
       package: package(),
       docs: docs(),
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        plt_add_apps: [:ex_unit]
+      ]
     ]
   end
 
