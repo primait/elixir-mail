@@ -15,7 +15,16 @@ defmodule Mail.Mixfile do
       description: description(),
       package: package(),
       docs: docs(),
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        plt_add_apps: [:ex_unit],
+        flags: [
+          "-Werror_handling",
+          "-Wunderspecs",
+          "-Wunknown",
+          "-Wunmatched_returns"
+        ]
+      ]
     ]
   end
 
@@ -53,6 +62,7 @@ defmodule Mail.Mixfile do
 
   defp deps do
     [
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end

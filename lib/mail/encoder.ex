@@ -5,7 +5,14 @@ defmodule Mail.Encoder do
   Will delegate to the proper encoding/decoding functions based upon name
   """
 
-  @spec encoder_for(encoding :: String.t() | atom) :: atom
+  @type encoder_module ::
+          Mail.Encoders.Base64
+          | Mail.Encoders.Binary
+          | Mail.Encoders.EightBit
+          | Mail.Encoders.QuotedPrintable
+          | Mail.Encoders.SevenBit
+
+  @spec encoder_for(encoding :: String.t() | atom) :: encoder_module
   def encoder_for(encoding) when is_atom(encoding) do
     encoding
     |> normalize()
